@@ -34,7 +34,8 @@ function CopyButton({ text }: { text: string }) {
 }
 
 export function Contact() {
-  const [sent, setSent] = useState(false);
+  const [status, setStatus] = useState<"idle" | "sending" | "sent" | "error">("idle");
+  const [errorMsg, setErrorMsg] = useState("");
   const [form, setForm] = useState({ name: "", email: "", subject: "", message: "" });
   return (
     <Section
