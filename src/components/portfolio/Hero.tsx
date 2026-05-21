@@ -96,7 +96,7 @@ export function Hero() {
 
           <div className="mt-10 grid max-w-md grid-cols-3 gap-4">
             {[
-              { k: "1+", v: "Year focus" },
+              { k: "1+", v: "Year of Learning" },
               { k: "10+", v: "Tools mastered" },
               { k: "4+", v: "Frameworks" },
             ].map((s) => (
