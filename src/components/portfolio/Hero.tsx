@@ -86,8 +86,7 @@ export function Hero() {
               Contact Me
             </a>
             <a
-              href="/lokesh-soc.pdf"
-              download="Lokesh-Kaushik-Resume.pdf"
+              href="https://drive.google.com/file/d/1jPYSVOQ8HT2HHB7dR1wi2RQY1nlbOXTZ/view?usp=sharing"
               target="_blank"
               rel="noopener noreferrer"
               className="glass inline-flex items-center gap-2 rounded-full px-5 py-2.5 text-sm font-medium transition hover:bg-white/10"
