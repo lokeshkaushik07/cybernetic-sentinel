@@ -125,11 +125,15 @@ function Field({
   name,
   type = "text",
   placeholder,
+  value,
+  onChange,
 }: {
   label: string;
   name: string;
   type?: string;
   placeholder?: string;
+  value: string;
+  onChange: (v: string) => void;
 }) {
   return (
     <div>
@@ -144,6 +148,8 @@ function Field({
         name={name}
         type={type}
         required
+        value={value}
+        onChange={(e) => onChange(e.target.value)}
         placeholder={placeholder}
         className="w-full rounded-xl border border-white/10 bg-white/5 px-4 py-2.5 text-sm outline-none transition focus:border-cyan-400/50 focus:bg-white/10 focus:shadow-[0_0_0_4px_oklch(0.85_0.18_200/0.12)]"
       />
