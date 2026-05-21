@@ -1,6 +1,11 @@
 import { useState } from "react";
+import emailjs from "@emailjs/browser";
 import { Section } from "./Section";
-import { Mail, MapPin, Phone, Linkedin, Github, Copy, Check, Send } from "lucide-react";
+import { Mail, MapPin, Phone, Linkedin, Github, Copy, Check, Send, Loader2 } from "lucide-react";
+
+const EMAILJS_SERVICE_ID = "service_prdytyj";
+const EMAILJS_TEMPLATE_ID = "template_eeaykvc";
+const EMAILJS_PUBLIC_KEY = "fVgXhduKeGyjAbNVF";
 
 const contacts = [
   { icon: Mail, label: "Email", value: "ilokeshkaushik@gmail.com", href: "mailto:ilokeshkaushik@gmail.com" },
@@ -29,7 +34,8 @@ function CopyButton({ text }: { text: string }) {
 }
 
 export function Contact() {
-  const [sent, setSent] = useState(false);
+  const [status, setStatus] = useState<"idle" | "sending" | "sent" | "error">("idle");
+  const [errorMsg, setErrorMsg] = useState("");
   const [form, setForm] = useState({ name: "", email: "", subject: "", message: "" });
   return (
     <Section
@@ -77,15 +83,38 @@ export function Contact() {
         </div>
 
         <form
-          onSubmit={(e) => {
+          onSubmit={async (e) => {
             e.preventDefault();
-            const subject = encodeURIComponent(form.subject || `Portfolio contact from ${form.name}`);
-            const body = encodeURIComponent(
-              `Name: ${form.name}\nEmail: ${form.email}\n\n${form.message}`,
-            );
-            window.location.href = `mailto:ilokeshkaushik@gmail.com?subject=${subject}&body=${body}`;
-            setSent(true);
-            setTimeout(() => setSent(false), 2500);
+            if (status === "sending") return;
+            setStatus("sending");
+            setErrorMsg("");
+            try {
+              await emailjs.send(
+                EMAILJS_SERVICE_ID,
+                EMAILJS_TEMPLATE_ID,
+                {
+                  from_name: form.name,
+                  from_email: form.email,
+                  reply_to: form.email,
+                  subject: form.subject || `Portfolio contact from ${form.name}`,
+                  message: form.message,
+                  to_email: "ilokeshkaushik@gmail.com",
+                },
+                { publicKey: EMAILJS_PUBLIC_KEY },
+              );
+              setStatus("sent");
+              setForm({ name: "", email: "", subject: "", message: "" });
+              setTimeout(() => setStatus("idle"), 3000);
+            } catch (err: unknown) {
+              const message =
+                typeof err === "object" && err && "text" in err
+                  ? String((err as { text?: string }).text)
+                  : err instanceof Error
+                    ? err.message
+                    : "Failed to send. Please try again.";
+              setErrorMsg(message);
+              setStatus("error");
+            }
           }}
           className="glass-strong space-y-4 rounded-3xl p-6 md:p-8"
         >
@@ -107,12 +136,26 @@ export function Contact() {
               className="w-full resize-none rounded-xl border border-white/10 bg-white/5 px-4 py-3 text-sm outline-none transition focus:border-cyan-400/50 focus:bg-white/10 focus:shadow-[0_0_0_4px_oklch(0.85_0.18_200/0.12)]"
             />
           </div>
+          {status === "error" && (
+            <p className="text-sm text-red-400">{errorMsg}</p>
+          )}
           <button
             type="submit"
-            className="group inline-flex w-full items-center justify-center gap-2 rounded-full bg-gradient-to-r from-cyan-400 to-purple-500 px-5 py-3 text-sm font-medium text-background transition hover:opacity-90 glow-cyan sm:w-auto"
+            disabled={status === "sending"}
+            className="group inline-flex w-full items-center justify-center gap-2 rounded-full bg-gradient-to-r from-cyan-400 to-purple-500 px-5 py-3 text-sm font-medium text-background transition hover:opacity-90 glow-cyan disabled:opacity-60 sm:w-auto"
           >
-            {sent ? <Check className="h-4 w-4" /> : <Send className="h-4 w-4" />}
-            {sent ? "Opening your email app…" : "Send message"}
+            {status === "sending" ? (
+              <Loader2 className="h-4 w-4 animate-spin" />
+            ) : status === "sent" ? (
+              <Check className="h-4 w-4" />
+            ) : (
+              <Send className="h-4 w-4" />
+            )}
+            {status === "sending"
+              ? "Sending…"
+              : status === "sent"
+                ? "Message sent!"
+                : "Send message"}
           </button>
         </form>
       </div>
