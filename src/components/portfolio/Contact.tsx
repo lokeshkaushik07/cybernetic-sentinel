@@ -79,16 +79,21 @@ export function Contact() {
         <form
           onSubmit={(e) => {
             e.preventDefault();
+            const subject = encodeURIComponent(form.subject || `Portfolio contact from ${form.name}`);
+            const body = encodeURIComponent(
+              `Name: ${form.name}\nEmail: ${form.email}\n\n${form.message}`,
+            );
+            window.location.href = `mailto:ilokeshkaushik@gmail.com?subject=${subject}&body=${body}`;
             setSent(true);
             setTimeout(() => setSent(false), 2500);
           }}
           className="glass-strong space-y-4 rounded-3xl p-6 md:p-8"
         >
           <div className="grid gap-4 sm:grid-cols-2">
-            <Field label="Name" name="name" placeholder="Your name" />
-            <Field label="Email" name="email" type="email" placeholder="you@domain.com" />
+            <Field label="Name" name="name" placeholder="Your name" value={form.name} onChange={(v) => setForm((f) => ({ ...f, name: v }))} />
+            <Field label="Email" name="email" type="email" placeholder="you@domain.com" value={form.email} onChange={(v) => setForm((f) => ({ ...f, email: v }))} />
           </div>
-          <Field label="Subject" name="subject" placeholder="What's this about?" />
+          <Field label="Subject" name="subject" placeholder="What's this about?" value={form.subject} onChange={(v) => setForm((f) => ({ ...f, subject: v }))} />
           <div>
             <label className="mb-1.5 block font-mono text-[11px] uppercase tracking-widest text-muted-foreground">
               Message
@@ -96,6 +101,8 @@ export function Contact() {
             <textarea
               required
               rows={5}
+              value={form.message}
+              onChange={(e) => setForm((f) => ({ ...f, message: e.target.value }))}
               placeholder="Tell me a bit about the role or project…"
               className="w-full resize-none rounded-xl border border-white/10 bg-white/5 px-4 py-3 text-sm outline-none transition focus:border-cyan-400/50 focus:bg-white/10 focus:shadow-[0_0_0_4px_oklch(0.85_0.18_200/0.12)]"
             />
@@ -105,7 +112,7 @@ export function Contact() {
             className="group inline-flex w-full items-center justify-center gap-2 rounded-full bg-gradient-to-r from-cyan-400 to-purple-500 px-5 py-3 text-sm font-medium text-background transition hover:opacity-90 glow-cyan sm:w-auto"
           >
             {sent ? <Check className="h-4 w-4" /> : <Send className="h-4 w-4" />}
-            {sent ? "Message queued" : "Send message"}
+            {sent ? "Opening your email app…" : "Send message"}
           </button>
         </form>
       </div>
