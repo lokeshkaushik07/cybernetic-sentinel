@@ -1,6 +1,11 @@
 import { useState } from "react";
+import emailjs from "@emailjs/browser";
 import { Section } from "./Section";
-import { Mail, MapPin, Phone, Linkedin, Github, Copy, Check, Send } from "lucide-react";
+import { Mail, MapPin, Phone, Linkedin, Github, Copy, Check, Send, Loader2 } from "lucide-react";
+
+const EMAILJS_SERVICE_ID = "service_prdytyj";
+const EMAILJS_TEMPLATE_ID = "template_eeaykvc";
+const EMAILJS_PUBLIC_KEY = "fVgXhduKeGyjAbNVF";
 
 const contacts = [
   { icon: Mail, label: "Email", value: "ilokeshkaushik@gmail.com", href: "mailto:ilokeshkaushik@gmail.com" },
