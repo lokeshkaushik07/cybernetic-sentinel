@@ -4,7 +4,7 @@ import profile from "@/assets/profile.jpg";
 
 const roles = [
   "SOC Analyst",
-  "Cloud Security Specialist",
+  "Cloud Security",
   "GRC Practitioner",
   "Threat Hunter",
 ];
