@@ -30,6 +30,7 @@ function CopyButton({ text }: { text: string }) {
 
 export function Contact() {
   const [sent, setSent] = useState(false);
+  const [form, setForm] = useState({ name: "", email: "", subject: "", message: "" });
   return (
     <Section
       id="contact"
