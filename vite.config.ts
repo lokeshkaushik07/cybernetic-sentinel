@@ -12,4 +12,10 @@ export default defineConfig({
   tanstackStart: {
     server: { entry: "server" },
   },
+  // Ensure Vite emits relative asset paths so index.html and built assets work behind
+  // Vercel rewrites. This prevents asset 404s when index.html is served for nested routes.
+  vite: {
+    base: "./",
+    build: { outDir: "dist" },
+  },
 });
